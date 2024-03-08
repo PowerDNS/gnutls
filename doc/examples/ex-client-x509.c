@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <pthread.h>
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
 #include "examples.h"
@@ -29,7 +30,7 @@
 extern int tcp_connect(void);
 extern void tcp_close(int sd);
 
-int main(void)
+void* _main(void* arg)
 {
 	int ret, sd, ii;
 	gnutls_session_t session;
@@ -64,8 +65,8 @@ int main(void)
 	CHECK(gnutls_init(&session, GNUTLS_CLIENT));
 
 	CHECK(gnutls_server_name_set(session, GNUTLS_NAME_DNS,
-				     "www.example.com",
-				     strlen("www.example.com")));
+				     "dnsdist.org",
+				     strlen("dnsdist.org")));
 
 	/* It is recommended to use the default priorities */
 	CHECK(gnutls_set_default_priority(session));
@@ -73,7 +74,7 @@ int main(void)
 	/* put the x509 credentials to the current session
 	 */
 	CHECK(gnutls_credentials_set(session, GNUTLS_CRD_CERTIFICATE, xcred));
-	gnutls_session_set_verify_cert(session, "www.example.com", 0);
+	gnutls_session_set_verify_cert(session, "dnsdist.org", 0);
 
 	/* connect to the peer
 	 */
@@ -141,4 +142,15 @@ end:
 	gnutls_global_deinit();
 
 	return 0;
+}
+
+int main(void) {
+	pthread_t thread;
+	int s;
+	if (pthread_create(&thread, NULL, _main, NULL) !=0) {
+		perror("pthread_create");
+		return 1;
+	}
+	pthread_join(thread, NULL);
+	//return _main();
 }

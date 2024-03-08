@@ -22,8 +22,8 @@ void tcp_close(int sd);
  */
 extern int tcp_connect(void)
 {
-	const char *PORT = "5556";
-	const char *SERVER = "127.0.0.1";
+	const char *PORT = "443";
+	const char *SERVER = "188.166.104.92";
 	int err, sd;
 	struct sockaddr_in sa;
 
