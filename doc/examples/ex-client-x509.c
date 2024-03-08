@@ -47,7 +47,7 @@ void* _main(void* arg)
 	}
 
 	/* for backwards compatibility with gnutls < 3.3.0 */
-	CHECK(gnutls_global_init());
+//	CHECK(gnutls_global_init());
 
 	/* X509 stuff */
 	CHECK(gnutls_certificate_allocate_credentials(&xcred));
@@ -139,7 +139,7 @@ end:
 
 	gnutls_certificate_free_credentials(xcred);
 
-	gnutls_global_deinit();
+//	gnutls_global_deinit();
 
 	return 0;
 }
