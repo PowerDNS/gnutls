@@ -144,13 +144,17 @@ end:
 	return 0;
 }
 
-int main(void) {
-	pthread_t thread;
-	int s;
-	if (pthread_create(&thread, NULL, _main, NULL) !=0) {
-		perror("pthread_create");
-		return 1;
-	}
-	pthread_join(thread, NULL);
+int main(int argc, char **argv) {
+	int lim = atoi(argv[1]);
+	for(int i=0; i < lim; i++) {
+		pthread_t thread;
+		if (pthread_create(&thread, NULL, _main, NULL) !=0) {
+			perror("pthread_create");
+			return 1;
+		}
+		pthread_join(thread, NULL);
+        }
+
+	return 0;
 	//return _main();
 }
